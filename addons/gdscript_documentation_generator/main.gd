@@ -26,9 +26,9 @@ var status: LineEdit
 var pages := {}
 var current_page: Control
 
-###############################################################################
+#-----------------------------------------------------------------------------#
 # Builtin functions                                                           #
-###############################################################################
+#-----------------------------------------------------------------------------#
 
 func _ready() -> void:
 	logs = $VBoxContainer/HSplitContainer/Pages/Logs as TextEdit
@@ -86,9 +86,9 @@ func _ready() -> void:
 	
 	_add_log("Ready")
 
-###############################################################################
+#-----------------------------------------------------------------------------#
 # Connections                                                                 #
-###############################################################################
+#-----------------------------------------------------------------------------#
 
 static func _delete(node: Node) -> void:
 	node.queue_free()
@@ -132,15 +132,17 @@ func _on_generate(scan_line_edit: LineEdit, output_line_edit: LineEdit) -> void:
 	_add_log("Parsing %s" % scan_line_edit.text)
 	
 	var parser := Parser.new()
-	var err := parser.scan(scan_line_edit.text)
-	if err != OK:
-		_add_log("Error occurred while parsing %d" % err)
+	var parser_res := parser.scan(scan_line_edit.text)
+	if parser_res.is_err():
+		_add_log("Error occurred while parsing\n%s" % str(parser_res))
 		return
+	
+	print(parser.result)
 	
 	_add_log("Finished parsing")
 	
 	var doc_generator := DocGenerator.new()
-	err = doc_generator.generate(parser.result)
+	var err = doc_generator.generate(parser.result)
 	if err != OK:
 		_add_log("Error occurred while generating %d" % err)
 		return
@@ -166,9 +168,9 @@ func _on_tree_item_selected() -> void:
 	current_page = pages[page_name]
 	current_page.show()
 
-###############################################################################
+#-----------------------------------------------------------------------------#
 # Private functions                                                           #
-###############################################################################
+#-----------------------------------------------------------------------------#
 
 func _read_global_settings() -> int:
 	var dir := Directory.new()
@@ -227,6 +229,6 @@ func _add_log(text: String) -> void:
 	logs.text = "%s%s\n" % [logs.text, text]
 	status.text = text
 
-###############################################################################
+#-----------------------------------------------------------------------------#
 # Public functions                                                            #
-###############################################################################
+#-----------------------------------------------------------------------------#

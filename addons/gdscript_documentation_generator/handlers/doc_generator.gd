@@ -13,6 +13,11 @@ var result := ""
 
 var _builder := []
 
+## Generates documentation based on an input Dictionary
+##
+## @param: data: Dictionary - The input data
+##
+## @return: int - The error code
 func generate(data: Dictionary) -> int:
 	for file_name in data.keys():
 		_add_line(FILE_NAME_MARKDOWN % file_name)
