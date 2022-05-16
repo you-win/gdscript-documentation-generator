@@ -88,16 +88,6 @@ class Documentation:
 	## Needed for validating properties, otherwise vars declared inside funcs will be processed by accident
 	var tab_count := 0
 
-	func _to_string() -> String:
-		var r := "%s\n" % file.to_string()
-
-		for i in ["classes", "vars", "consts", "enums", "funcs", "static_funcs"]:
-			print(i)
-			for j in get(i):
-				r += "%s\n" % j.to_string()
-
-		return r
-
 ## Documentation for an inner class
 class InnerClassDoc extends Documentation:
 	pass

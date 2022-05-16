@@ -137,8 +137,6 @@ func _on_generate(scan_line_edit: LineEdit, output_line_edit: LineEdit) -> void:
 		_add_log("Error occurred while parsing\n%s" % str(parser_res))
 		return
 	
-	print(parser.result)
-	
 	_add_log("Finished parsing")
 	
 	var doc_generator := DocGenerator.new()
