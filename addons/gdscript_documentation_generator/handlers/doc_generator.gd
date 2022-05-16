@@ -179,9 +179,8 @@ static func _process_doc(data: Reference) -> void:
 		_add_separator()
 
 	for prop in ["vars", "consts", "enums", "funcs", "static_funcs"]:
+		_add_line("## %s" % prop)
 		for i in data.get(prop):
-			_add_line("## %s" % i)
-
 			_process_doc_item(i)
 
 		_add_separator()
@@ -190,7 +189,7 @@ static func _process_doc(data: Reference) -> void:
 ##
 ## @param: data: DocData - The docstring to process
 static func _process_doc_item(data: Reference) -> void:
-	if not data.has("name"):
+	if not data.get("name"):
 		return
 	
 	_add_line("### %s" % data.name)
@@ -210,11 +209,34 @@ static func _process_doc_item(data: Reference) -> void:
 
 	_add_doc_item("Example", data.example)
 
-	_add_doc_item("Parameters", data.params)
-
-	_add_doc_item("Return value", data.return_value)
-
 	_add_doc_item("Type", data.type)
+
+	# _add_doc_item("Parameters", data.params)
+	if not data.params.empty():
+		_BUILDER.append("| Name | Type | Description |")
+		_BUILDER.append("| --- | --- | --- |")
+		for key in data.params.keys():
+			var param_dict: Dictionary = data.params[key]
+			_BUILDER.append(PARAM_TABLE_MARKDOWN %
+				[
+					key,
+					param_dict.get("type", ""),
+					param_dict.get("desc", "")
+				]
+			)
+		
+		_add_line("")
+
+	# _add_doc_item("Return value", data.return_value)
+	if not data.return_value.empty():
+		_BUILDER.append("|Type | Description |")
+		_BUILDER.append("| --- | --- |")
+		_BUILDER.append(RETURN_TABLE_MARKDOWN %
+			[
+				data.return_value.get("type", ""),
+				data.return_value.get("desc", "")
+			]
+		)
 
 static func _add_doc_item(item_name: String, item) -> void:
 	if item.empty():
